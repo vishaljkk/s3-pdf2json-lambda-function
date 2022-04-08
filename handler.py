@@ -3,6 +3,7 @@ from pdfminer.layout import LTTextContainer, LTChar
 import re
 import json
 import pyjokes
+import boto3
 
 text_list = []
 text_size = []
