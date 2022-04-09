@@ -54,10 +54,8 @@ def json_resume(event, context):
     if event:
         file_obj = event["Records"][0]
         filename = str(file_obj["s3"]["object"]["key"])
-        print(filename)
         if filename.split('.')[-1] == 'pdf':
             tmp_filename = '/tmp/' + str(filename)
-            print(tmp_filename)
             s3.download_file(bucket_name, filename, tmp_filename)
             for page_layout in extract_pages(tmp_filename):
                 for element in page_layout:
@@ -147,7 +145,7 @@ def json_resume(event, context):
                 print('File Uploaded Successfully')
                 print(SQS_CLIENT.send_message(
                     QueueUrl=os.getenv('SQS_URL'),
-                    MessageBody=filename
+                    MessageBody=str(filename)
                 ))
             else:
                 print('File Not Uploaded')
