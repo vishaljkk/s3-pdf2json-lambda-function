@@ -93,7 +93,7 @@ def json_resume(event, context):
                         while(text_size[count] < 11 and len(text_list) > count):
                             temp_exp = temp_exp + text_list[count]
                             count = count+1
-                            experience.append(temp_exp)
+                        experience.append(temp_exp)
                 if(text_list[idx]=='Education\n' and text_size[idx] == 15.75):
                     count = idx+1
                     while(text_size[idx] > text_size[count] and len(text_list)-1 > count):
