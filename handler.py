@@ -2,8 +2,22 @@ from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer, LTChar
 import re
 import json
-import pyjokes
 import boto3
+import json
+
+# initializing s3 connection with boto client
+
+session = boto3.Session(
+    aws_access_key_id='AKIA5YZNISARGR7EVXW5',
+    aws_secret_access_key='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',
+    region_name='ap-south-1',
+    profile_name='vishal-dev'
+)
+
+# Creating S3 Resource From the Session.
+
+client = session.client('s3')
+
 
 text_list = []
 text_size = []
@@ -101,26 +115,36 @@ def json_resume(event, context):
                     # extracting the linked in url of a profile
                     unprocessed_linkedin = find_between_r(text_list[idx], "www.linkedin.com", "(LinkedIn)" )
                     linkedin_url = 'https://www.linkedin.com'+unprocessed_linkedin.replace("\n", "")
-            print("\nYour profile link is : ",linkedin_url)
-            print('\nYour Contact number : ',contact_number)
-            print('\nYour name : ',name)
-            print('\nYour Role : ',job_role)
-            print('\nYour skills : ',skills)
-            print('\nLinked in url : ',linkedin_url)
-            print('\nYour Location : ', current_location)
-            print('\nYour Email : ',email)
-            print('\nYour Profile Summary is :', summary)
             for exp in experience:
                 print('\nYour Experience is :', exp)
             for edu in education:
                 print('\nYour Experience is :', edu)
-            body = {
-                "message": "Greetings from Githun. Your function is deployed by a Github Actions. Enjoy your joke",
-                "joke":pyjokes.get_joke()
+            
+            data = {
+                "linkedin_url":linkedin_url,
+                "name":name,
+                "email":email,
+                "contact_number":contact_number,
+                "current_location":current_location,
+                "job_role":job_role,
+                "summary":summary,
+                "skills":skills,
+                "experience":experience,
+                "eduction":education
             }
-            response = {
-                "statusCode": 200,
-                "body": json.dumps(body)
-            }
-            return response
+
+            data = json.dumps(data).encode('UTF-8')
+
+            json_file = filename.split('.')[-2]
+            json_file = json_file+'.json'
+            result = client.put_object(ACL='public-read',Body=data, Bucket='my-pdf-upload-bucket', Key=json-file)
+
+            res = result.get('ResponseMetadata')
+
+            # To generate cloudwatch logs
+            if res.get('HTTPStatusCode') == 200:
+                print('File Uploaded Successfully')
+            else:
+                print('File Not Uploaded')
+            
 

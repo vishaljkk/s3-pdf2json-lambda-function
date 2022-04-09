@@ -2,3 +2,4 @@ pdfminer.six
 regex
 pyjokes
 boto3
+json
