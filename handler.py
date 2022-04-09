@@ -22,6 +22,7 @@ session = boto3.Session(
 
 client = session.client('s3')
 
+SQS_CLIENT = boto3.client('sqs')
 
 text_list = []
 text_size = []
@@ -144,6 +145,10 @@ def json_resume(event, context):
             # To generate cloudwatch logs
             if res.get('HTTPStatusCode') == 200:
                 print('File Uploaded Successfully')
+                print(SQS_CLIENT.send_message(
+                    QueueUrl=os.getenv('SQS_URL'),
+                    MessageBody=filename
+                ))
             else:
                 print('File Not Uploaded')
             

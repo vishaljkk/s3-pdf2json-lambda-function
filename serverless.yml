@@ -4,6 +4,13 @@ provider:
   runtime: python3.7
   region: ap-south-1
 
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "sqs:SendMessage"
+      Resource:
+        Fn::GetAtt: [ SQSQueue, Arn ]
+
 custom:
   pythonRequirements:
     dockerizePip: true
@@ -22,6 +29,16 @@ functions:
       - http:
           path: joke
           method: get
+      - sqs:
+          arn:
+            Fn::GetAtt: [ SQSQueue, Arn ]
 
 plugins:
   - serverless-python-requirements
+
+resources:
+  Resources:
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:custom.queueName}
