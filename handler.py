@@ -11,7 +11,7 @@ import json
 AWS_ACCESS_KEY_ID = os.environ['aws_access_key_id']
 AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_access_key']
 AWS_REGION = os.environ['region_name']
-
+SQS_ULR = os.getenv('SQS_URL')
 session = boto3.Session(
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -138,17 +138,20 @@ def json_resume(event, context):
             json_file = json_file+'.json'
             result = client.put_object(ACL='public-read',Body=data, Bucket='my-pdf-upload-bucket', Key=json_file)
 
-            res = result.get('ResponseMetadata')
+            s3_res = result.get('ResponseMetadata')
 
             # To generate cloudwatch logs
-            if res.get('HTTPStatusCode') == 200:
+            if s3_res.get('HTTPStatusCode') == 200:
                 print('File Uploaded Successfully')
-                print(os.getenv('SQS_URL'))
                 response = SQS_CLIENT.send_message(
-                    QueueUrl=os.getenv('SQS_URL'),
+                    QueueUrl=SQS_ULR,
                     MessageBody=str(filename)
                 )
-                print(response)
+                sqs_res = result.get('ResponseMetadata')
+                if(sqs_res.get('HTTPStatusCode')== 200):
+                    print('Message Sent to Sqs Queue')
+                else:
+                    print('Failed to send Message to SQS')
             else:
                 print('File Not Uploaded')
             
