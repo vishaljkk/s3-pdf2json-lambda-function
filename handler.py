@@ -143,10 +143,12 @@ def json_resume(event, context):
             # To generate cloudwatch logs
             if res.get('HTTPStatusCode') == 200:
                 print('File Uploaded Successfully')
-                print(SQS_CLIENT.send_message(
+                print(os.getenv('SQS_URL'))
+                response = SQS_CLIENT.send_message(
                     QueueUrl=os.getenv('SQS_URL'),
                     MessageBody=str(filename)
-                ))
+                )
+                print(response)
             else:
                 print('File Not Uploaded')
             
