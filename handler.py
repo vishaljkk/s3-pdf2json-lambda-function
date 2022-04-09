@@ -1,3 +1,4 @@
+import os
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer, LTChar
 import re
@@ -7,10 +8,14 @@ import json
 
 # initializing s3 connection with boto client
 
+AWS_ACCESS_KEY_ID = os.environ['aws_access_key_id']
+AWS_SECRET_ACCESS_KEY = os.environ['aws_secret_access_key']
+AWS_REGION = os.environ['region_name']
+
 session = boto3.Session(
-    aws_access_key_id='AKIA5YZNISARGR7EVXW5',
-    aws_secret_access_key='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',
-    region_name='ap-south-1',
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION,
 )
 
 # Creating S3 Resource From the Session.
