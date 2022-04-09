@@ -114,10 +114,6 @@ def json_resume(event, context):
                     # extracting the linked in url of a profile
                     unprocessed_linkedin = find_between_r(text_list[idx], "www.linkedin.com", "(LinkedIn)" )
                     linkedin_url = 'https://www.linkedin.com'+unprocessed_linkedin.replace("\n", "")
-            for exp in experience:
-                print('\nYour Experience is :', exp)
-            for edu in education:
-                print('\nYour Experience is :', edu)
             
             data = {
                 "linkedin_url":linkedin_url,
@@ -136,7 +132,7 @@ def json_resume(event, context):
 
             json_file = filename.split('.')[-2]
             json_file = json_file+'.json'
-            result = client.put_object(ACL='public-read',Body=data, Bucket='my-pdf-upload-bucket', Key=json-file)
+            result = client.put_object(ACL='public-read',Body=data, Bucket='my-pdf-upload-bucket', Key=json_file)
 
             res = result.get('ResponseMetadata')
 
