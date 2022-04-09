@@ -11,7 +11,6 @@ session = boto3.Session(
     aws_access_key_id='AKIA5YZNISARGR7EVXW5',
     aws_secret_access_key='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',
     region_name='ap-south-1',
-    profile_name='vishal-dev'
 )
 
 # Creating S3 Resource From the Session.
