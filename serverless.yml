@@ -26,9 +26,6 @@ functions:
   get_joke:
     handler: handler.json_resume
     events:
-      - http:
-          path: joke
-          method: get
       - sqs:
           arn:
             Fn::GetAtt: [ SQSQueue, Arn ]
