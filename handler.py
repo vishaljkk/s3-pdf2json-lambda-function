@@ -145,11 +145,11 @@ def json_resume(event, context):
                 print('File Uploaded Successfully')
                 response = SQS_CLIENT.send_message(
                     QueueUrl=SQS_ULR,
-                    MessageBody=str(filename)
+                    MessageBody=filename
                 )
                 sqs_res = result.get('ResponseMetadata')
                 if(sqs_res.get('HTTPStatusCode')== 200):
-                    print('Message Sent to Sqs Queue')
+                    print('Message Sent to Sqs Queue', filename)
                 else:
                     print('Failed to send Message to SQS')
             else:
